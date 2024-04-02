@@ -1,0 +1,9 @@
+{
+  "name": "username/hello",
+  "version": "0.1.0",
+  "readme": "README.md",
+  "repository": "",
+  "license": "MIT",
+  "keywords": ["monad", "state"],
+  "description": "An implementation of State Moand in Moonbit"
+}
