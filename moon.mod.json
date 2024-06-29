@@ -5,5 +5,5 @@
   "repository": "https://github.com/moonbit-community/state.git",
   "license": "MIT",
   "keywords": ["monad", "state"],
-  "description": "An implementation of State Moand in Moonbit"
+  "description": "An implementation of State Monad in Moonbit"
 }
