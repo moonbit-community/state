@@ -37,11 +37,11 @@ test "state_monad_laws" {
   }
 
   let m1 = left_identity(10, add)
-  @assertion.assert_true(run_state_eq(m1, 0))?
+  assert_true!(run_state_eq(m1, 0))
   let m2 = right_identity(counter)
-  @assertion.assert_true(run_state_eq(m2, 0))?
+  assert_true!(run_state_eq(m2, 0))
   let m3 = bind_associator(counter, add, mul)
-  @assertion.assert_true(run_state_eq(m3, 0))?
+  assert_true!(run_state_eq(m3, 0))
 }
 
 fn map_identity[S, V](m : State[S, V]) -> State[S, V] {
@@ -61,7 +61,7 @@ test "state_functor_laws" {
   let add = fn { x => x + 2 }
   let mul = fn { x => x * 2 }
   let m1 = map_identity(counter)
-  @assertion.assert_true(run_state_eq((counter, m1), 0))?
+  assert_true!(run_state_eq((counter, m1), 0))
   let m2 = map_associator(counter, add, mul)
-  @assertion.assert_true(run_state_eq(m2, 0))?
+  assert_true!(run_state_eq(m2, 0))
 }
