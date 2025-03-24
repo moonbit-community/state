@@ -1,3 +1,4 @@
+///|
 fn left_identity[S, V](
   x : V,
   f : (V) -> State[S, V]
@@ -5,10 +6,12 @@ fn left_identity[S, V](
   (State::new(x).bind(f), f(x))
 }
 
+///|
 fn right_identity[S, V](m : State[S, V]) -> (State[S, V], State[S, V]) {
   (m, m.bind(State::new))
 }
 
+///|
 fn bind_associator[S, V, W, X](
   m : State[S, V],
   f : (V) -> State[S, W],
@@ -17,6 +20,7 @@ fn bind_associator[S, V, W, X](
   (m.bind(f).bind(g), m.bind(fn { x => f(x).bind(g) }))
 }
 
+///|
 fn run_state_eq[S : Eq + Show, V : Eq + Show](
   m : (State[S, V], State[S, V]),
   state : S
@@ -26,6 +30,7 @@ fn run_state_eq[S : Eq + Show, V : Eq + Show](
   v1 == v2 && s1 == s2
 }
 
+///|
 test "state_monad_laws" {
   let counter = State::new(10)
   fn add(s) -> State[Int, Int] {
@@ -44,10 +49,12 @@ test "state_monad_laws" {
   assert_true!(run_state_eq(m3, 0))
 }
 
+///|
 fn map_identity[S, V](m : State[S, V]) -> State[S, V] {
   m.map(fn { x => x })
 }
 
+///|
 fn map_associator[S, V, W, X](
   m : State[S, V],
   f : (V) -> W,
@@ -56,6 +63,7 @@ fn map_associator[S, V, W, X](
   (m.map(f).map(g), m.map(fn { x => g(f(x)) }))
 }
 
+///|
 test "state_functor_laws" {
   let counter = State::new(10)
   let add = fn { x => x + 2 }

@@ -1,0 +1,36 @@
+package CAIMEOX/state/src
+
+// Values
+fn bind[S, V, W](State[S, V], (V) -> State[S, W]) -> State[S, W]
+
+fn eval_state[S, V](State[S, V], S) -> V
+
+fn exec_state[S, V](State[S, V], S) -> S
+
+fn get[S]() -> State[S, S]
+
+fn map[S, V, W](State[S, V], (V) -> W) -> State[S, W]
+
+fn modify[S]((S) -> S) -> State[S, Unit]
+
+fn put[S](S) -> State[S, Unit]
+
+fn run_state[S, V](State[S, V], S) -> (V, S)
+
+fn state[S, V]((S) -> (V, S)) -> State[S, V]
+
+// Types and methods
+type State[S, V]
+impl State {
+  bind[S, V, W](Self[S, V], (V) -> Self[S, W]) -> Self[S, W]
+  eval_state[S, V](Self[S, V], S) -> V
+  exec_state[S, V](Self[S, V], S) -> S
+  map[S, V, W](Self[S, V], (V) -> W) -> Self[S, W]
+  new[S, V](V) -> Self[S, V]
+  run_state[S, V](Self[S, V], S) -> (V, S)
+}
+
+// Type aliases
+
+// Traits
+

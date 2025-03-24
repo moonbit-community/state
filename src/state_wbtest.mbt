@@ -1,28 +1,34 @@
+///|
 test "new" {
   let state : State[Int, Int] = State::new(10)
   assert_eq!(run_state(state, 0), (10, 0))
 }
 
+///|
 test "state" {
   let state : State[Int, Int] = state(fn { x => (x + 1, x + 1) })
   assert_eq!(run_state(state, 0), (1, 1))
 }
 
+///|
 test "get" {
   let state : State[Int, Int] = State::new(10) |> bind(fn { _ => get() })
   assert_eq!(run_state(state, 20), (20, 20))
 }
 
+///|
 test "put" {
   let state : State[Int, Unit] = State::new(10) |> bind(fn { _ => put(20) })
   assert_eq!(run_state(state, 0), ((), 20))
 }
 
+///|
 test "map" {
   let state : State[Int, Int] = State::new(10) |> map(fn { x => x + 1 })
   assert_eq!(run_state(state, 0), (11, 0))
 }
 
+///|
 test "modify" {
   let state : State[Int, Int] = State::new(0)
     |> bind(fn { _ => modify(fn { x => x + 1 }) })
@@ -30,32 +36,38 @@ test "modify" {
   assert_eq!(run_state(state, 0), (1, 1))
 }
 
+///|
 test "bind" {
   let state : State[Int, Int] = State::new(10)
     |> bind(fn { _ => put(20) })
-    |> bind(fn { _ => get() |> bind(fn { x => new(x + 1) }) })
+    |> bind(fn { _ => get() |> bind(fn { x => State::new(x + 1) }) })
   assert_eq!(run_state(state, 0), (21, 20))
 }
 
+///|
 test "run_state" {
   let state : State[Int, Int] = State::new(10)
   assert_eq!(run_state(state, 0), (10, 0))
 }
 
+///|
 test "eval_state" {
   let state : State[Int, Int] = State::new(10)
     |> bind(fn { _ => put(20) })
-    |> bind(fn { _ => get() |> bind(fn { x => new(x + 1) }) })
+    |> bind(fn { _ => get() |> bind(fn { x => State::new(x + 1) }) })
   assert_eq!(eval_state(state, 0), 21)
 }
 
+///|
 test "exec_state" {
   let state : State[Int, Unit] = State::new(10) |> bind(fn { _ => put(20) })
   assert_eq!(exec_state(state, 0), 20)
 }
 
+///|
 typealias List[T] = @immut/list.T[T]
 
+///|
 test "state_stack" {
   fn push(n : Int) -> State[List[Int], Int] {
     { runState: fn(ns : List[Int]) { (n, Cons(n, ns)) } }
@@ -106,9 +118,10 @@ test "state_stack" {
   assert_eq!(run_state(prog6, Nil), (200, Cons(200, Nil)))
 }
 
+///|
 test "tick_state" {
   fn tick() -> State[Int, Int] {
-    get().bind(fn { x => put(x + 1).bind(fn { _ => new(x) }) })
+    get().bind(fn { x => put(x + 1).bind(fn { _ => State::new(x) }) })
   }
 
   for i = 0; i < 100; i = i + 1 {
