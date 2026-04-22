@@ -1,9 +1,11 @@
-///| A simple implementation of the State Monad.
+///|
+/// A simple implementation of the State Monad.
 struct State[S, V] {
   runState : (S) -> (V, S)
 }
 
-///| Create a new state monad with a value.
+///|
+/// Create a new state monad with a value.
 /// 
 /// # Example
 /// ```
@@ -13,7 +15,8 @@ pub fn[S, V] State::new(val : V) -> State[S, V] {
   { runState: fn(state) { (val, state) } }
 }
 
-///| Embed a simple state action into the state monad.
+///|
+/// Embed a simple state action into the state monad.
 /// 
 /// # Example
 /// ```
@@ -23,7 +26,8 @@ pub fn[S, V] state(f : (S) -> (V, S)) -> State[S, V] {
   { runState: f }
 }
 
-///| Return the state from the internals of the monad.
+///|
+/// Return the state from the internals of the monad.
 /// 
 /// # Example
 /// ```
@@ -33,7 +37,8 @@ pub fn[S] get() -> State[S, S] {
   { runState: fn(state) { (state, state) } }
 }
 
-///| Replace the state inside the monad.
+///|
+/// Replace the state inside the monad.
 /// 
 /// # Example
 /// ```
@@ -43,7 +48,8 @@ pub fn[S] put(new_state : S) -> State[S, Unit] {
   { runState: fn(_) { ((), new_state) } }
 }
 
-///| Maps a value inside a state monad.
+///|
+/// Maps a value inside a state monad.
 /// 
 /// # Example
 /// ```
@@ -58,7 +64,8 @@ pub fn[S, V, W] State::map(self : State[S, V], f : (V) -> W) -> State[S, W] {
   }
 }
 
-///| Maps an old state to a new state inside a state monad.
+///|
+/// Maps an old state to a new state inside a state monad.
 /// 
 /// # Example
 /// ```
@@ -70,7 +77,8 @@ pub fn[S] modify(f : (S) -> S) -> State[S, Unit] {
   { runState: fn(state : S) { ((), f(state)) } }
 }
 
-///| Bind a state monad computation to a function.
+///|
+/// Bind a state monad computation to a function.
 /// 
 /// # Example
 /// ```
@@ -91,7 +99,8 @@ pub fn[S, V, W] State::bind(
   }
 }
 
-///| Unwrap a state monad computation as a function.
+///|
+/// Unwrap a state monad computation as a function.
 /// 
 /// # Example
 /// ```
@@ -102,14 +111,16 @@ pub fn[S, V] State::run_state(self : State[S, V], state : S) -> (V, S) {
   (self.runState)(state)
 }
 
-///| Evaluate a state computation with the given initial state and return the final value, discarding the final state.
+///|
+/// Evaluate a state computation with the given initial state and return the final value, discarding the final state.
 /// 
 /// # Example
 pub fn[S, V] State::eval_state(self : State[S, V], state : S) -> V {
   self.run_state(state).0
 }
 
-///| Evaluate a state computation with the given initial state and return the final state, discarding the final value.
+///|
+/// Evaluate a state computation with the given initial state and return the final state, discarding the final value.
 /// 
 /// # Example
 /// ```
