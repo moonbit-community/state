@@ -1,0 +1,27 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "CAIMEOX/state/src"
+
+// Values
+pub fn[S] get() -> State[S, S]
+
+pub fn[S] modify((S) -> S) -> State[S, Unit]
+
+pub fn[S] put(S) -> State[S, Unit]
+
+pub fn[S, V] state((S) -> (V, S)) -> State[S, V]
+
+// Errors
+
+// Types and methods
+type State[S, V]
+pub fn[S, V, W] State::bind(Self[S, V], (V) -> Self[S, W]) -> Self[S, W]
+pub fn[S, V] State::eval_state(Self[S, V], S) -> V
+pub fn[S, V] State::exec_state(Self[S, V], S) -> S
+pub fn[S, V, W] State::map(Self[S, V], (V) -> W) -> Self[S, W]
+pub fn[S, V] State::new(V) -> Self[S, V]
+pub fn[S, V] State::run_state(Self[S, V], S) -> (V, S)
+
+// Type aliases
+
+// Traits
+
