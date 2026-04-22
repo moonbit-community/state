@@ -49,7 +49,7 @@ pub fn[S] put(new_state : S) -> State[S, Unit] {
 /// ```
 /// let _state : State[Int, Int] = State::new(10).map(fn(x) { x + 1 })
 /// ```
-pub fn[S, V, W] map(self : State[S, V], f : (V) -> W) -> State[S, W] {
+pub fn[S, V, W] State::map(self : State[S, V], f : (V) -> W) -> State[S, W] {
   {
     runState: fn(state : S) {
       let (val, new_state) = (self.runState)(state)
@@ -78,7 +78,10 @@ pub fn[S] modify(f : (S) -> S) -> State[S, Unit] {
 ///   .bind(fn(_) { put(20) })
 ///   .bind(fn(_) { get().bind(fn(x) { State::new(x + 1) }) })
 /// ```
-pub fn[S, V, W] bind(self : State[S, V], f : (V) -> State[S, W]) -> State[S, W] {
+pub fn[S, V, W] State::bind(
+  self : State[S, V],
+  f : (V) -> State[S, W],
+) -> State[S, W] {
   {
     runState: fn(state : S) {
       let (val, new_state) = (self.runState)(state)
@@ -95,14 +98,14 @@ pub fn[S, V, W] bind(self : State[S, V], f : (V) -> State[S, W]) -> State[S, W] 
 /// let state : State[Int, Int] = State::new(10)
 /// let _result = state.run_state(0)
 /// ```
-pub fn[S, V] run_state(self : State[S, V], state : S) -> (V, S) {
+pub fn[S, V] State::run_state(self : State[S, V], state : S) -> (V, S) {
   (self.runState)(state)
 }
 
 ///| Evaluate a state computation with the given initial state and return the final value, discarding the final state.
 /// 
 /// # Example
-pub fn[S, V] eval_state(self : State[S, V], state : S) -> V {
+pub fn[S, V] State::eval_state(self : State[S, V], state : S) -> V {
   self.run_state(state).0
 }
 
@@ -112,6 +115,6 @@ pub fn[S, V] eval_state(self : State[S, V], state : S) -> V {
 /// ```
 /// let _state : State[Int, Unit] = State::new(10).bind(fn(_) { put(20) })
 /// ```
-pub fn[S, V] exec_state(self : State[S, V], state : S) -> S {
+pub fn[S, V] State::exec_state(self : State[S, V], state : S) -> S {
   self.run_state(state).1
 }
