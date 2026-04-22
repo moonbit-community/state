@@ -68,13 +68,13 @@ test "exec_state" {
 
 ///|
 test "state_stack" {
-  fn push(n : Int) -> State[@array.View[Int], Int] {
-    { runState: fn(ns : @array.View[Int]) { (n, [n, ..ns]) } }
+  fn push(n : Int) -> State[ArrayView[Int], Int] {
+    { runState: fn(ns : ArrayView[Int]) { (n, [n, ..ns]) } }
   }
 
-  fn pop() -> State[@array.View[Int], Int] {
+  fn pop() -> State[ArrayView[Int], Int] {
     {
-      runState: fn(ns : @array.View[Int]) {
+      runState: fn(ns : ArrayView[Int]) {
         match ns {
           [] => abort("empty stack")
           [n, .. ns] => (n, ns)
@@ -83,21 +83,21 @@ test "state_stack" {
     }
   }
 
-  fn plus() -> State[@array.View[Int], Int] {
+  fn plus() -> State[ArrayView[Int], Int] {
     pop().bind(fn(n1) { pop().bind(fn(n2) { push(n1 + n2) }) })
   }
 
-  fn mult() -> State[@array.View[Int], Int] {
+  fn mult() -> State[ArrayView[Int], Int] {
     pop().bind(fn(n1) { pop().bind(fn(n2) { push(n1 * n2) }) })
   }
 
-  let prog : State[@array.View[Int], Int] = push(2)
+  let prog : State[ArrayView[Int], Int] = push(2)
     .bind(fn(_) { push(3) })
     .bind(fn(_) { push(5) })
     .bind(fn(_) { plus() })
     .bind(fn(_) { mult() })
   assert_eq(prog.run_state([]), (16, [16]))
-  let prog2 : State[@array.View[Int], String] = State::new(10)
+  let prog2 : State[ArrayView[Int], String] = State::new(10)
     .bind(fn(x) { push(3 + x) })
     .bind(fn(_) { push(5) })
     .bind(fn(_) { mult() })
@@ -107,9 +107,9 @@ test "state_stack" {
   assert_eq(prog3.eval_state([]), [3, 2])
   let prog4 = State::new(0).bind(fn(_) { put(123) }).bind(fn(_) { get() })
   assert_eq(prog4.run_state(0), (123, 123))
-  let prog5 : State[@array.View[Int], Int] = State::new(5)
+  let prog5 : State[ArrayView[Int], Int] = State::new(5)
   assert_eq(prog5.eval_state([]), 5)
-  let prog6 : State[@array.View[Int], Int] = push(2)
+  let prog6 : State[ArrayView[Int], Int] = push(2)
     .bind(fn(_) { modify(fn(x) { [100, ..x] }) })
     .bind(fn(_) { mult() })
   assert_eq(prog6.run_state([]), (200, [200]))
