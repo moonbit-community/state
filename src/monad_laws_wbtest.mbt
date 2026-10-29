@@ -33,11 +33,11 @@ fn[S : Eq, V : Eq] run_state_eq(
 ///|
 test "state_monad_laws" {
   let counter = State::new(10)
-  fn add(s) -> State[Int, Int] {
+  fn add(s) -> State[Int32, Int32] {
     put(s + 2).bind(fn(_) { get() })
   }
 
-  fn mul(s) -> State[Int, Int] {
+  fn mul(s) -> State[Int32, Int32] {
     put(s * 2).bind(fn(_) { get() })
   }
 
