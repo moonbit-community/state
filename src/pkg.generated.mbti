@@ -24,4 +24,3 @@ pub fn[S, V] State::run_state(Self[S, V], S) -> (V, S)
 // Type aliases
 
 // Traits
-

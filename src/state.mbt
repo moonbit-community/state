@@ -12,7 +12,7 @@ struct State[S, V] {
 /// let _state: State[Int, Int] = State::new(10)
 /// ```
 pub fn[S, V] State::new(val : V) -> State[S, V] {
-  { runState: fn(state) { (val, state) } }
+  { runState: fn(state) { (val, state) }, }
 }
 
 ///|
@@ -23,7 +23,7 @@ pub fn[S, V] State::new(val : V) -> State[S, V] {
 /// let _state: State[Int, Int] = state(fn(x) { (x + 1, x + 1) })
 /// ```
 pub fn[S, V] state(f : (S) -> (V, S)) -> State[S, V] {
-  { runState: f }
+  { runState: f, }
 }
 
 ///|
@@ -34,7 +34,7 @@ pub fn[S, V] state(f : (S) -> (V, S)) -> State[S, V] {
 /// let _state: State[Int, Int] = State::new(10).bind(fn(_) { get() })
 /// ```
 pub fn[S] get() -> State[S, S] {
-  { runState: fn(state) { (state, state) } }
+  { runState: fn(state) { (state, state) }, }
 }
 
 ///|
@@ -45,7 +45,7 @@ pub fn[S] get() -> State[S, S] {
 /// let _state: State[Int, Unit] = State::new(10).bind(fn(_) { put(20) })
 /// ```
 pub fn[S] put(new_state : S) -> State[S, Unit] {
-  { runState: fn(_) { ((), new_state) } }
+  { runState: fn(_) { ((), new_state) }, }
 }
 
 ///|
@@ -74,7 +74,7 @@ pub fn[S, V, W] State::map(self : State[S, V], f : (V) -> W) -> State[S, W] {
 ///   .bind(fn(_) { get() })
 /// ```
 pub fn[S] modify(f : (S) -> S) -> State[S, Unit] {
-  { runState: fn(state : S) { ((), f(state)) } }
+  { runState: fn(state : S) { ((), f(state)) }, }
 }
 
 ///|
@@ -93,7 +93,7 @@ pub fn[S, V, W] State::bind(
   {
     runState: fn(state : S) {
       let (val, new_state) = (self.runState)(state)
-      let { runState: g } = f(val)
+      let { runState: g, } = f(val)
       g(new_state)
     },
   }
